@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cryptocurrency',
+    'user',
+    'scheduler',
 ]
 
 MIDDLEWARE = [
@@ -111,7 +114,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-AUTH_USER_MODEL = 'user.User'
+#AUTH_USER_MODEL = 'user.User'
 
 
 # Static files (CSS, JavaScript, Images)
