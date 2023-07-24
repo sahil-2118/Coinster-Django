@@ -13,3 +13,5 @@ class CryptoCurrency(models.Model):
     percent_change_7d = models.FloatField()
     market_cap = models.FloatField()
     last_update = models.DateTimeField()
+    created_at = models.DateTimeField()
+    deleted_at = models.DateTimeField()
