@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from ..cryptocurrency.models import CryptoCurrency
+from cryptocurrency.models import CryptoCurrency
 
 User = get_user_model()
 
