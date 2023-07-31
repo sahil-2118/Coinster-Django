@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class CryptoCurrency(models.Model):
 
     name                = models.CharField(

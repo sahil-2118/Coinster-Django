@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres import fields
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
 
@@ -8,7 +9,7 @@ User = get_user_model()
 
 class Scheduler(models.Model):
 
-    time_range  = models.BigIntegerField(
+    time_range  = fields.DateTimeRangeField(
                                 verbose_name=_("""
                                                this is time range for store the range of time that user want to send data
                                                """),
