@@ -10,6 +10,10 @@ class CryptoCurrency(models.Model):
                                             max_length=50,
                                         )
     rank                = models.PositiveSmallIntegerField()
+    price               = models.DecimalField(
+                                            max_digits=13,
+                                            decimal_places=4,
+                                            )
     circulating_supply  = models.BigIntegerField(
                                             null=True,
                                             blank=True,
