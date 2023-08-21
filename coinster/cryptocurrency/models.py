@@ -13,16 +13,13 @@ class CryptoCurrency(models.Model):
     price               = models.DecimalField(
                                             max_digits=13,
                                             decimal_places=4,
+                                            default=0,
                                             )
     circulating_supply  = models.BigIntegerField(
                                             null=True,
                                             blank=True,
                                             )
-    total_supply        = models.BigIntegerField(
-                                            null=True,
-                                            blank=True,
-                                            )
-    volume_24h          = models.IntegerField()
+    volume_24h          = models.BigIntegerField()
     percent_change_24h  = models.FloatField(
                                             null=True,
                                             blank=True,

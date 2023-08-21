@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'cryptocurrency',
     'user',
     'scheduler',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
