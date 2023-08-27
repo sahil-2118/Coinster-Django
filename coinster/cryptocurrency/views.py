@@ -1,4 +1,4 @@
-from .serializers import CryptocurrencyRequestSerializer
+from .serializers import CryptocurrencySerializer
 from .models import CryptoCurrency
 from rest_framework import status
 from rest_framework.response import Response
@@ -11,13 +11,13 @@ class CryptoList(APIView):
 
     def get(self, request):
         cryptoes   = CryptoCurrency.objects.all()
-        serializer = CryptocurrencyRequestSerializer(
+        serializer = CryptocurrencySerializer(
                                                         cryptoes,
                                                         many=True,
                                                     )
         return Response(serializer.data)
     def post(self, request):
-        serializer = CryptocurrencyRequestSerializer(data=request.data)
+        serializer = CryptocurrencySerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -34,12 +34,12 @@ class CryptoDetail(APIView):
     
     def get(self, request, pk):
         crypto = CryptoCurrency.objects.get(pk=pk)
-        serializer = CryptocurrencyRequestSerializer(crypto)
+        serializer = CryptocurrencySerializer(crypto)
         return Response(serializer.data)
     
     def put(self, request, pk):
         crypto = CryptoCurrency.objects.get(pk=pk)
-        serializer = CryptocurrencyRequestSerializer(crypto, data=request.data)
+        serializer = CryptocurrencySerializer(crypto, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

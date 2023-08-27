@@ -17,9 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from cryptocurrency.views import CryptoList, CryptoDetail
+from scheduler.views import SchedulerDetail,SchedulerList
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('v1/cryptos/', CryptoList.as_view()),
     path('v1/cryptos/<pk>', CryptoDetail.as_view()),
+    path('v1/schedulers/', SchedulerList.as_view()),
+    path('v1/scheduler/<pk>/', SchedulerDetail.as_view()), 
 ]
