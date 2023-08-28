@@ -9,7 +9,7 @@ User = get_user_model()
 
 class Scheduler(models.Model):
 
-    time_range  = fields.DateTimeRangeField(
+    time_range  = models.IntegerField(
                                 verbose_name=_("""
                                                this is time range for store the range of time that user want to send data
                                                """),

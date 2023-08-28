@@ -25,7 +25,7 @@ class SchedulerDetail(mixins.RetrieveModelMixin,
                       generics.GenericAPIView):
     
     queryset = Scheduler.objects.all()
-    serializer_class = SchedulerRequestSerializer
+    serializer_class = SchedulerResponseSerializer
     
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)

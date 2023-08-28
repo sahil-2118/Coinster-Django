@@ -5,9 +5,11 @@ class CryptoCurrency(models.Model):
 
     name                = models.CharField(
                                             max_length=50,
+                                            unique=True,
                                         )
     symbol              = models.CharField(
                                             max_length=50,
+                                            unique=True,
                                         )
     rank                = models.PositiveSmallIntegerField()
     price               = models.DecimalField(

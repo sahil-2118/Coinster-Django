@@ -22,7 +22,7 @@ from scheduler.views import SchedulerDetail,SchedulerList
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('v1/cryptos/', CryptoList.as_view()),
-    path('v1/cryptos/<pk>', CryptoDetail.as_view()),
+    path('v1/cryptos/<pk>', CryptoDetail.as_view(), name="crypto_detail"),
     path('v1/schedulers/', SchedulerList.as_view()),
     path('v1/scheduler/<pk>/', SchedulerDetail.as_view()), 
 ]
