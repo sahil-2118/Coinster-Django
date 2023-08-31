@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import CryptoCurrency
 
 
-class CryptocurrencySerializer(serializers.ModelSerializer):
+class CryptocurrencyModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model   = CryptoCurrency
@@ -11,3 +11,5 @@ class CryptocurrencySerializer(serializers.ModelSerializer):
                     'deleted_at',
                   ]
         read_only_fields = ["id", "last_updated"]
+
+

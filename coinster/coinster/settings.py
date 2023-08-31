@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'user',
     'scheduler',
     'rest_framework',
+    'django_crontab',
 ]
 
 MIDDLEWARE = [
@@ -134,3 +135,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+CRONJOBS = [
+    ('*/2 * * * *', 'cryptocurrency.cron.crypto_scheduler')
+]
