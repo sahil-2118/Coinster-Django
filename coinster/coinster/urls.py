@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from cryptocurrency.views import CryptoList, CryptoDetail
 from scheduler.views import SchedulerDetail,SchedulerList
+from user.views import TokenView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,4 +26,5 @@ urlpatterns = [
     path('v1/cryptos/<pk>', CryptoDetail.as_view(), name="crypto_detail"),
     path('v1/schedulers/', SchedulerList.as_view()),
     path('v1/scheduler/<pk>/', SchedulerDetail.as_view()), 
+    path('v1/tokenauth/', TokenView.as_view()),
 ]

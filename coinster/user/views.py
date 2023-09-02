@@ -1,3 +1,4 @@
-from django.shortcuts import render
+from rest_framework.authtoken.views import ObtainAuthToken
 
-# Create your views here.
+class TokenView(ObtainAuthToken):
+    pass

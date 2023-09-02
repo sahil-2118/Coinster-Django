@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'scheduler',
     'rest_framework',
     'django_crontab',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
