@@ -13,3 +13,5 @@ class CryptocurrencyModelSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "last_updated"]
 
 
+
+    

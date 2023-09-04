@@ -3,7 +3,8 @@ from .models import CryptoCurrency
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.http import Http404
+from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
 
 
 
@@ -26,19 +27,13 @@ class CryptoList(APIView):
 
 class CryptoDetail(APIView):
 
-    def get_object(self, pk):
-        try:
-            return CryptoCurrency.objects.get(pk=pk)
-        except CryptoCurrency.DoesNotExist:
-            raise Http404
-    
     def get(self, request, pk):
-        crypto = CryptoCurrency.objects.get(pk=pk)
+        crypto = get_object_or_404(CryptoCurrency, pk=pk)
         serializer = CryptocurrencyModelSerializer(crypto)
         return Response(serializer.data)
     
     def put(self, request, pk):
-        crypto = CryptoCurrency.objects.get(pk=pk)
+        crypto = get_object_or_404(CryptoCurrency, pk=pk)
         serializer = CryptocurrencyModelSerializer(crypto, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -46,7 +41,7 @@ class CryptoDetail(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def delete(self, request, pk):
-        crypto = CryptoCurrency.objects.get(pk=pk)
+        crypto = get_object_or_404(CryptoCurrency, pk=pk)
         crypto.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
