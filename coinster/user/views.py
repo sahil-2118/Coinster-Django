@@ -41,5 +41,7 @@ class RetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         self.serializer_class = UserRequestSerializer
         return self.delete(request, *args, **kwargs)
     
-
+    def perform_update(self, serializer):
+        password = make_password(self.request.data['password'])
+        serializer.save(password=password)
     
