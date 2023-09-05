@@ -140,7 +140,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 CRONJOBS = [
-    ('*/2 * * * *', 'cryptocurrency.cron.crypto_scheduler')
+    ('*/1 * * * *', 'cryptocurrency.cron.crypto_scheduler')
 ]
 
 REST_FRAMEWORK = {
