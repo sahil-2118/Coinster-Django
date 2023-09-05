@@ -2,6 +2,7 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework import generics
 from .serializer import UserRequestSerializer, UserResponseSerializer
 from .models import User
+from django.contrib.auth.hashers import make_password
 
 class TokenView(ObtainAuthToken):
     pass
@@ -18,6 +19,10 @@ class ListCreateView(generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         self.serializer_class = UserRequestSerializer
         return self.create(request, *args, **kwargs)
+    
+    def perform_create(self, serializer):
+        password = make_password(self.request.data['password'])
+        serializer.save(password=password)
     
 
 class RetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
