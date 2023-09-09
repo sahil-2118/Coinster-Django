@@ -3,14 +3,14 @@ from user.models import User
 from cryptocurrency.models import CryptoCurrency
 from .models import Scheduler
 
-class SchedulerRequestSerializer(serializers.Serializer):
+class SchedulerResponseSerializer(serializers.Serializer):
     
     id = serializers.IntegerField()
     owner = serializers.PrimaryKeyRelatedField(read_only=True)
     crypto = serializers.HyperlinkedRelatedField(view_name="crypto_detail", read_only=True)
     updated_at = serializers.DateTimeField()
     
-class SchedulerResponseSerializer(serializers.Serializer):
+class SchedulerRequestSerializer(serializers.Serializer):
    
    time_range = serializers.IntegerField()
    owner = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())

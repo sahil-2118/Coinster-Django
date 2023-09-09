@@ -4,7 +4,9 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import (IsAdminUser, 
+                                        SAFE_METHODS,
+                                        AllowAny,)
 
 
 
@@ -23,6 +25,12 @@ class CryptoList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def get_permissions(self):
+        if self.request.method in SAFE_METHODS:
+            return (AllowAny,)
+        else:
+            return (IsAdminUser,)
     
 
 class CryptoDetail(APIView):
@@ -44,4 +52,10 @@ class CryptoDetail(APIView):
         crypto = get_object_or_404(CryptoCurrency, pk=pk)
         crypto.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    def get_permissions(self):
+        if self.request.method in SAFE_METHODS:
+            return (AllowAny,)
+        else:
+            return (IsAdminUser,)
 
