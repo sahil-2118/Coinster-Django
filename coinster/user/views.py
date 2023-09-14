@@ -4,9 +4,18 @@ from .serializer import UserRequestSerializer, UserResponseSerializer
 from .models import User
 from django.contrib.auth.hashers import make_password
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.authtoken.models import Token
 
-class TokenView(ObtainAuthToken):
+class LoginView(ObtainAuthToken):
     pass
+
+class LogoutView(generics.GenericAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        return Token.objects.filter(user=request.user).delete()
 
 class ListCreateView(generics.ListCreateAPIView):
 
@@ -35,7 +44,7 @@ class ListCreateView(generics.ListCreateAPIView):
 class RetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = User.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated,]
 
     def get(self, request, *args, **kwargs):
         self.serializer_class = UserResponseSerializer

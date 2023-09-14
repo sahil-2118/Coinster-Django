@@ -17,16 +17,25 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from cryptocurrency.views import CryptoList, CryptoDetail
-from scheduler.views import SchedulerDetail,SchedulerList
-from user.views import TokenView, ListCreateView, RetrieveUpdateDestroyView
+from scheduler.views import (SchedulerDetail,
+                             SchedulerList,
+                             SchedulerRequest,
+                             )
+from user.views import (LoginView, 
+                        ListCreateView, 
+                        RetrieveUpdateDestroyView,
+                        LogoutView,
+                        )
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('v1/cryptos/', CryptoList.as_view()),
     path('v1/cryptos/<pk>', CryptoDetail.as_view(), name="crypto_detail"),
     path('v1/schedulers/', SchedulerList.as_view()),
-    path('v1/scheduler/<pk>/', SchedulerDetail.as_view()), 
-    path('v1/tokenauth/', TokenView.as_view()),
+    path('v1/scheduler/<pk>/', SchedulerDetail.as_view()),
+    path('v1/scheduler/', SchedulerRequest.as_view()), 
+    path('v1/login/', LoginView.as_view()),
+    path('v1/logout/', LogoutView.as_view()),
     path('v1/users/', ListCreateView.as_view()),
     path('v1/user/<pk>/', RetrieveUpdateDestroyView.as_view()),
 ]

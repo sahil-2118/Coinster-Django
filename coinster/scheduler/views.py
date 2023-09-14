@@ -1,9 +1,18 @@
 from .models import Scheduler
-from .serializers import SchedulerRequestSerializer, SchedulerResponseSerializer
+from .serializers import (SchedulerRequestSerializer, 
+                          SchedulerResponseSerializer,
+                          )
 from rest_framework import mixins
 from rest_framework import generics
 from rest_framework.permissions import (DjangoModelPermissions,
-                                        IsAdminUser,)
+                                        IsAdminUser,
+                                        IsAuthenticated,
+                                        SAFE_METHODS)
+from django.db.models import Q
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.authtoken.models import Token
+from cryptocurrency.models import CryptoCurrency
 
 
 class SchedulerList(mixins.ListModelMixin, 
@@ -11,7 +20,6 @@ class SchedulerList(mixins.ListModelMixin,
                     generics.GenericAPIView):
     
     queryset = Scheduler.objects.all()
-    permission_classes = [DjangoModelPermissions|IsAdminUser]
     
 
     def get(self, request, *args, **kwargs):
@@ -19,11 +27,19 @@ class SchedulerList(mixins.ListModelMixin,
         return self.list(request, *args, **kwargs)
     
     def post(self, request, *args, **kwargs):
+        fetch_owner(request)
+        fetch_crypto(request)
         self.serializer_class = SchedulerRequestSerializer
         return self.create(request, *args, **kwargs)
     
     def has_permission(self, request, obj):
-        return obj.user == request.user
+        return obj.owner == request.user
+    
+    def get_permissions(self):
+        if self.request.method in SAFE_METHODS:
+            return (DjangoModelPermissions(), IsAdminUser(),)
+        else:
+            return (IsAuthenticated(),)
         
     
 
@@ -47,4 +63,43 @@ class SchedulerDetail(mixins.RetrieveModelMixin,
         return self.destroy(request, *args, **kwargs)
     
     def has_permission(self, request, obj):
-        return obj.user == request.user
+        return obj.owner == request.user
+    
+
+class SchedulerRequest(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        fetch_owner(request)
+        fetch_crypto(request)
+        serialized = SchedulerRequestSerializer(data=request.data)
+        if serialized.is_valid():
+            schechedulers = Scheduler.objects.filter(owner=serialized.data.get('owner')).filter(crypto=serialized.data.get('crypto'))
+            active_schedulers = schechedulers.filter(
+                Q(activated_at__gte=serialized.data.get('activated_at'), expaired_at__lte=serialized.data.get('expaired_at'))
+            )
+            if active_schedulers.exists():
+                return Response({"message": "You've got a scheduler for these days."})
+            else:
+                return Response({"message": "You don't have a scheduler for these days for this cryptocurrency."})
+            
+        return Response(serialized.errors, status=status.HTTP_400_BAD_REQUEST)   
+
+
+    
+
+    
+
+
+def fetch_owner(request):
+        owner = Token.objects.get(key=request.auth)
+        request.data['owner'] = owner.user_id
+
+
+def fetch_crypto(request):
+        value = request.data.get('crypto')
+        if value.isnumeric():
+            request.data['crypto'] = value
+        else:
+            crypto = CryptoCurrency.objects.get(symbol=value)
+            request.data['crypto'] = crypto.id

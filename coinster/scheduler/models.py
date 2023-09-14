@@ -1,7 +1,8 @@
 from django.db import models
-from django.contrib.postgres import fields
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
+from datetime import  timedelta
+from django.utils import timezone
 
 from cryptocurrency.models import CryptoCurrency
 
@@ -13,6 +14,7 @@ class Scheduler(models.Model):
                                 verbose_name=_("""
                                                this is time range for store the range of time that user want to send data
                                                """),
+                                default=60,
                                 )
     owner       = models.ForeignKey(
                                 to = User,
@@ -35,6 +37,10 @@ class Scheduler(models.Model):
     deleted_at  = models.DateTimeField(
                                 null=True,
                                 )
+    activated_at = models.DateTimeField(
+                                default=timezone.now(),
+                                )
+    expaired_at = models.DateTimeField(default=timezone.now() + timedelta(days=1),)
     class Meta:
        ordering = ["-created_at"]
        verbose_name_plural = "schedulers"
