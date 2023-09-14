@@ -30,12 +30,9 @@ def crypto_scheduler():
       data = json.loads(response.text)
       if data['data']:
         for crypto in data['data']:
-          print(crypto.get('symbol'))
           serialized = CryptocurrencyCreateOrUpdateSerializer(data=crypto)
           if serialized.is_valid():
             serialized.save()
-            #created = CryptoCurrency.objects.update_or_create(serialized)
-            print('success')
           else:
             print(serialized.errors)
       else:
