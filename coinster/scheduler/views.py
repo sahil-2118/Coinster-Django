@@ -81,7 +81,8 @@ class SchedulerRequest(generics.GenericAPIView):
             if active_schedulers.exists():
                 return Response({"message": "You've got a scheduler for these days."})
             else:
-                return Response({"message": "You don't have a scheduler for these days for this cryptocurrency."})
+
+                return Response(serialized.data)
             
         return Response(serialized.errors, status=status.HTTP_400_BAD_REQUEST)   
 

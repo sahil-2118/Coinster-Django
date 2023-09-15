@@ -44,9 +44,15 @@ class Scheduler(models.Model):
     class Meta:
        ordering = ["-created_at"]
        verbose_name_plural = "schedulers"
-       indexes =[
+       indexes = [
            models.Index(fields=["owner",]),
            models.Index(fields=["created_at",]),
+       ]
+       constraints = [
+           models.UniqueConstraint(
+                                   fields=['owner','crypto'],
+                                   name='unique_together_constraint',
+                                   )
        ] 
 
 
