@@ -4,6 +4,7 @@ from cryptocurrency.models import CryptoCurrency
 from .models import Scheduler
 from django.utils import timezone
 from datetime import  timedelta
+from rest_framework.validators import UniqueTogetherValidator
 
 
 class SchedulerResponseSerializer(serializers.Serializer):
@@ -23,6 +24,12 @@ class SchedulerRequestSerializer(serializers.Serializer):
    activated_at = serializers.DateTimeField(required=False, default=timezone.now())
    expaired_at = serializers.DateTimeField(required=False, default=timezone.now() + timedelta(days=1))
 
+   validators = [
+            UniqueTogetherValidator(
+                queryset=Scheduler.objects.all(),
+                fields=['owner', 'crypto']
+            )
+        ]
 
 
    def create(self, validated_data):
@@ -44,4 +51,9 @@ class SchedulerRequestSerializer(serializers.Serializer):
        else:
            return attrs
        
-  
+    
+class SchedulerSerializer(serializers.Serializer):
+
+   time_range = serializers.IntegerField()
+   owner = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+   crypto = serializers.PrimaryKeyRelatedField(queryset=CryptoCurrency.objects.all(),)

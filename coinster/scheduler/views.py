@@ -1,6 +1,7 @@
 from .models import Scheduler
 from .serializers import (SchedulerRequestSerializer, 
                           SchedulerResponseSerializer,
+                          SchedulerSerializer,
                           )
 from rest_framework import mixins
 from rest_framework import generics
@@ -13,6 +14,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from cryptocurrency.models import CryptoCurrency
+from django.utils import timezone
 
 
 class SchedulerList(mixins.ListModelMixin, 
@@ -49,7 +51,7 @@ class SchedulerDetail(mixins.RetrieveModelMixin,
                       generics.GenericAPIView):
     
     queryset = Scheduler.objects.all()
-    serializer_class = SchedulerResponseSerializer
+    serializer_class = SchedulerRequestSerializer
     permission_classes = [DjangoModelPermissions|IsAdminUser]
     
     def get(self, request, *args, **kwargs):
@@ -72,11 +74,12 @@ class SchedulerRequest(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         fetch_owner(request)
         fetch_crypto(request)
-        serialized = SchedulerRequestSerializer(data=request.data)
+        serialized = SchedulerSerializer(data=request.data)
         if serialized.is_valid():
+            now = timezone.now()
             schechedulers = Scheduler.objects.filter(owner=serialized.data.get('owner')).filter(crypto=serialized.data.get('crypto'))
             active_schedulers = schechedulers.filter(
-                Q(activated_at__gte=serialized.data.get('activated_at'), expaired_at__lte=serialized.data.get('expaired_at'))
+                Q(activated_at__lte = now) & Q(expaired_at__gte = now)
             )
             if active_schedulers.exists():
                 return Response({"message": "You've got a scheduler for these days."})
@@ -88,9 +91,6 @@ class SchedulerRequest(generics.GenericAPIView):
 
 
     
-
-    
-
 
 def fetch_owner(request):
         owner = Token.objects.get(key=request.auth)

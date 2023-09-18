@@ -3,11 +3,20 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
 from datetime import  timedelta
 from django.utils import timezone
+from datetime import datetime, timedelta
 
 from cryptocurrency.models import CryptoCurrency
 
 User = get_user_model()
 
+def default_time_tomorrow():
+    # Get the current date and time
+    now = timezone.now()
+    # Get the date of tomorrow
+    tomorrow = now.date() + timedelta(days=1)
+    # Combine the date and time
+    return timezone.combine(tomorrow, now)
+    
 class Scheduler(models.Model):
 
     time_range  = models.IntegerField(
@@ -38,9 +47,9 @@ class Scheduler(models.Model):
                                 null=True,
                                 )
     activated_at = models.DateTimeField(
-                                default=timezone.now(),
+                                default=timezone.now,
                                 )
-    expaired_at = models.DateTimeField(default=timezone.now() + timedelta(days=1),)
+    expaired_at = models.DateTimeField(default=default_time_tomorrow,)
     class Meta:
        ordering = ["-created_at"]
        verbose_name_plural = "schedulers"
@@ -48,12 +57,13 @@ class Scheduler(models.Model):
            models.Index(fields=["owner",]),
            models.Index(fields=["created_at",]),
        ]
-       constraints = [
-           models.UniqueConstraint(
-                                   fields=['owner','crypto'],
-                                   name='unique_together_constraint',
-                                   )
-       ] 
+       unique_together = (('owner', 'crypto'),)
+    #    constraints = [
+    #        models.UniqueConstraint(
+    #                                fields=['owner','crypto'],
+    #                                name='unique_together_constraint',
+    #                                )
+    #    ] 
 
 
 

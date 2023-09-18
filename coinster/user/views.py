@@ -36,9 +36,9 @@ class ListCreateView(generics.ListCreateAPIView):
 
     def get_permissions(self):
         if self.request.method == 'GET':
-            return (IsAuthenticated,)
-        else:
-            return (AllowAny,)
+            return (IsAuthenticated(),)
+        
+        return (AllowAny(),)
     
 
 class RetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
