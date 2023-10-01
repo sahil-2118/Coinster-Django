@@ -28,9 +28,9 @@ class CryptoList(APIView):
     
     def get_permissions(self):
         if self.request.method in SAFE_METHODS:
-            return (AllowAny,)
+            return (AllowAny(),)
         else:
-            return (IsAdminUser,)
+            return (IsAdminUser(),)
     
 
 class CryptoDetail(APIView):
@@ -55,7 +55,7 @@ class CryptoDetail(APIView):
     
     def get_permissions(self):
         if self.request.method in SAFE_METHODS:
-            return (AllowAny,)
+            return (AllowAny(),)
         else:
-            return (IsAdminUser,)
+            return (IsAdminUser(),)
 

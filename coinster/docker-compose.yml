@@ -9,7 +9,7 @@ services:
     env_file:
       - .env
 
-    command: bash -c "python3 manage.py makemigrations && python3 manage.py migrate  && python3 manage.py crontab add && gunicorn coinster.wsgi --bind 0.0.0.0:8000"
+    command: bash -c "python3 manage.py makemigrations && python3 manage.py migrate  && python3 manage.py crontab add &&uvicorn coinster.asgi:application --host 0.0.0.0 --ws websockets"
     networks:
       - db
 

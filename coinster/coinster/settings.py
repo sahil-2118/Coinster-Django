@@ -25,6 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
     'django_crontab',
     'rest_framework.authtoken',
     'channels',
+    'uvicorn',
 ]
 
 MIDDLEWARE = [
@@ -151,5 +153,16 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication', 
     ],
 }
+
+
+# CHANNEL_LAYERS = {
+# 'default': {
+#     'BACKEND' : 'asgi_redis.RedisChannelLayer',
+#     'CONFIG': {
+#         'hosts': [('localhost', 6379)],
+#     },
+#     'ROUTING': 'project.routing.channel_routing'
+# }
+# }
 
 
