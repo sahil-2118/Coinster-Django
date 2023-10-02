@@ -23,17 +23,44 @@ services:
       - .env
 
     ports:
-    - 5432:5432
+      - 5432:5432
 
     networks:
       - db
 
     volumes:
       - data:/var/lib/postgresql/data
-
+  
+  redis:
+    restart: unless-stopped
+    image: redis:alpine
+    ports:
+      - 6379:6379
+    expose:
+      - 6379
+  
+  celery:
+    build: .
+    command: celery -A coinster worker -l info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - db
+  celery-beat:
+    build: .
+    command: celery -A coinster beat -l info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - db
+    networks:
+      - db
 
 networks:
   db:
+
 
 volumes:
   data: 

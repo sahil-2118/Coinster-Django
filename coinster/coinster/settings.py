@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'channels',
     'uvicorn',
+    'django_celery_results',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -155,14 +157,9 @@ REST_FRAMEWORK = {
 }
 
 
-# CHANNEL_LAYERS = {
-# 'default': {
-#     'BACKEND' : 'asgi_redis.RedisChannelLayer',
-#     'CONFIG': {
-#         'hosts': [('localhost', 6379)],
-#     },
-#     'ROUTING': 'project.routing.channel_routing'
-# }
-# }
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_REDIS_URL', default='redis://redis:6379')
+CELERY_RESULT_BACKEND = 'redis://redis:6379'
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
+
 
 

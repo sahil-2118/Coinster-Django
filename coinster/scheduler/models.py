@@ -13,9 +13,9 @@ def default_time_tomorrow():
     # Get the current date and time
     now = timezone.now()
     # Get the date of tomorrow
-    tomorrow = now.date() + timedelta(days=1)
+    tomorrow = now + timedelta(days=1)
     # Combine the date and time
-    return timezone.combine(tomorrow, now)
+    return tomorrow.date
     
 class Scheduler(models.Model):
 
@@ -58,12 +58,7 @@ class Scheduler(models.Model):
            models.Index(fields=["created_at",]),
        ]
        unique_together = (('owner', 'crypto'),)
-    #    constraints = [
-    #        models.UniqueConstraint(
-    #                                fields=['owner','crypto'],
-    #                                name='unique_together_constraint',
-    #                                )
-    #    ] 
+    
 
 
 
