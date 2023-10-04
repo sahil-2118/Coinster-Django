@@ -160,6 +160,7 @@ REST_FRAMEWORK = {
 CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_REDIS_URL', default='redis://redis:6379')
 CELERY_RESULT_BACKEND = 'redis://redis:6379'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
+CELERY_TIMEZONE = 'Asia/Tehran'
 
 
 
