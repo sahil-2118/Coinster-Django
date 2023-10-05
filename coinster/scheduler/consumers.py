@@ -7,7 +7,8 @@ from urllib.parse import parse_qs
 from django.db.models import Q
 from django.utils import timezone
 from scheduler.models import Scheduler
-from celery import shared_task
+from cryptocurrency.serializers import CryptocurrencyModelSerializer
+from scheduler.serializers import SchedulerSerializer
 import asyncio
 
 
@@ -20,7 +21,8 @@ class SchedulerConsumer(AsyncJsonWebsocketConsumer):
             Q(activated_at__lte = now) & Q(expaired_at__gte = now)
         )
         if active_schedulers.exists():
-            return True, active_schedulers.time_range
+            serialized = SchedulerSerializer(active_schedulers.first()) 
+            return True, int(serialized.data.get("time_range"))
     
         return False, None
 
@@ -36,10 +38,12 @@ class SchedulerConsumer(AsyncJsonWebsocketConsumer):
 
 
     async def check_is_valid_request(self, symbol, user):
-        content, crypto_id = await asyncio.wait(self.get_crypto(symbol), return_when=asyncio.FIRST_COMPLETED)
-        exist, time_range = self.check_scheduler(user, crypto_id)
+        task = asyncio.create_task(self.get_crypto(symbol))
+        content, crypto_id = await task
+        task1 = asyncio.create_task(self.check_scheduler(user, crypto_id))
+        exist, time_range = await task1
         if self.scope.get('user').is_authenticated & (content is not None) & exist:
-            return True, content,time_range
+            return True, content, time_range
         return False, None, None
     
     async def connect(self):
@@ -48,6 +52,7 @@ class SchedulerConsumer(AsyncJsonWebsocketConsumer):
         query_dict = parse_qs(query_params)
         symbol = query_dict["coin"][0]
         is_ok, content, time_range = await self.check_is_valid_request(symbol, self.scope.get('user'))
+        print('yesss', is_ok)
         if is_ok:
             await self.accept()
             while True:
@@ -58,7 +63,9 @@ class SchedulerConsumer(AsyncJsonWebsocketConsumer):
 
     async def send_json(self, content, close=False):
         exist, _ = await self.check_scheduler(self.scope.get('user'), content)
+        print(exist)
         if exist:
+            content = CryptocurrencyModelSerializer(content).data
             return await super().send_json(content, close=close)
         else:
             self.close()
